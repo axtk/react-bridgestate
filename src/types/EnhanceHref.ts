@@ -1,4 +1,4 @@
-import type { LocationValue } from "statepod";
+import type { LocationValue } from "statepack";
 
 export type EnhanceHref<T extends { href?: string | undefined }> = Omit<
   T,

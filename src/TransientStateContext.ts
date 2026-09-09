@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { State } from "statepod";
+import type { State } from "statepack";
 import type { TransientState } from "./types/TransientState.ts";
 
 export const TransientStateContext = createContext(

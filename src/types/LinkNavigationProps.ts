@@ -1,4 +1,4 @@
-import type { NavigationOptions } from "statepod";
+import type { NavigationOptions } from "statepack";
 
 export type LinkNavigationProps = {
   "data-spa"?: NavigationOptions["spa"];

@@ -1,4 +1,4 @@
-# react-statepod
+# react-statepack
 
 A shared state management and routing lib for React apps. Under the hood, routing is shared state management, too, with the shared data being the URL.
 
@@ -19,7 +19,7 @@ Apparently focusing on other aspects, **Redux Toolkit** and **MobX** don't fulfi
 
 With a useState-like API, **Jotai** is the closest match (points (1) and (2) fulfilled). Still, Jotai requires a workaround API, a special hook, to set up SSR<sup>[[3](https://jotai.org/docs/utilities/ssr)]</sup> (point (3) unmet). Also, subjectively, the Jotai's core `atom()` function with its elaborate capabilities is an overkill for state management that looks hard to tree-shake.
 
-The `useExternalState()` hook of `react-statepod` is an attempt to come up with a mostly self-explanatory lightweight useState-like approach to shared state management by focusing on the three points listed above. The lib's other hooks are built around the common practical use cases for `useExternalState()`. Whatever unused is tree-shakable.
+The `useExternalState()` hook of `react-statepack` is an attempt to come up with a mostly self-explanatory lightweight useState-like approach to shared state management by focusing on the three points listed above. The lib's other hooks are built around the common practical use cases for `useExternalState()`. Whatever unused is tree-shakable.
 
 </details>
 
@@ -36,7 +36,7 @@ This hook is focused on simplicity of both setting up shared state from scratch 
 Move local state to the full-fledged shared state with minimal paradigm shift and minimal code changes:
 
 ```diff
-+ import { State, useExternalState } from "react-statepod";
++ import { State, useExternalState } from "react-statepack";
 +
 + const counterState = new State(0);
 
@@ -97,7 +97,7 @@ There are two strategies of filtering state updates, as the application state st
 
 ```js
 import { createContext, useContext } from "react";
-import { State, useExternalState } from "react-statepod";
+import { State, useExternalState } from "react-statepack";
 
 const AppContext = createContext({
   users: new State(/* User data, e.g. a map of <id>: <user info> */),
@@ -143,7 +143,7 @@ Immer can be used with state setters returned from `useExternalState()` just the
 Replace `State` with `PersistentState` as shown below to get the state data synced to the specified `key` in `localStorage` and restored on page reload. After a persistent state is created, use it with `useExternalState(state)` the same way as `State` instances.
 
 ```js
-import { PersistentState } from "react-statepod";
+import { PersistentState } from "react-statepack";
 
 const counterState = new PersistentState(0, { key: "counter" });
 ```
@@ -165,7 +165,7 @@ Use this hook for URL-based rendering and SPA navigation, which boil down to acc
 URL-based rendering with `at(url, x, y?)` shown below works similarly to conditional rendering with the ternary operator `atURL ? x : y`. It's equally applicable to props and components:
 
 ```jsx
-import { useRoute } from "react-statepod";
+import { useRoute } from "react-statepack";
 
 const App = () => {
   const { at } = useRoute();
@@ -188,14 +188,14 @@ const App = () => {
 
 ⬥ See also the [Type-safe routes](#type-safe-routes) section.
 
-⬥ Routing with `react-statepod` is based on the core idea behind all approaches to route-based rendering: conditional rendering based on the URL. Unlike component-, config-, or file-based approaches, the `react-statepod`'s imperative approach sticks to this core idea without additional abstraction layers and specific relations between routes (like layout nesting or parameter inheritance) offering full explicit control over route-based rendering.
+⬥ Routing with `react-statepack` is based on the core idea behind all approaches to route-based rendering: conditional rendering based on the URL. Unlike component-, config-, or file-based approaches, the `react-statepack`'s imperative approach sticks to this core idea without additional abstraction layers and specific relations between routes (like layout nesting or parameter inheritance) offering full explicit control over route-based rendering.
 
 ### SPA navigation
 
 The shape of the SPA navigation API is largely aligned with the similar built-in browser APIs (but still compatible with SSR):
 
 ```diff
-+ import { A, useRoute } from "react-statepod";
++ import { A, useRoute } from "react-statepack";
 
   const UserNav = ({ signedIn }) => {
 +   const { route } = useRoute();
@@ -247,7 +247,7 @@ These hooks set up optional actions to be done before and after a SPA navigation
 Some common examples of what can be handled with the routing middleware include redirecting to another URL, preventing navigation with unsaved user input, setting the page title based on the current URL:
 
 ```jsx
-import { useNavigationComplete, useNavigationStart } from "react-statepod";
+import { useNavigationComplete, useNavigationStart } from "react-statepack";
 
 function setTitle({ href }) {
   document.title = href === "/intro" ? "Intro" : "App";
@@ -283,7 +283,7 @@ const App = () => {
 When it's necessary to put a portion of the app's state to the URL, use this hook to manage URL parameters as state in a `useState`-like manner. Use the React's state mental model and migrate from local state without major code rewrites:
 
 ```diff
-+ import { useRouteState } from "react-statepod";
++ import { useRouteState } from "react-statepack";
 
   const App = () => {
 -   const [{ coords }, setState] = useState({ coords: { x: 0, y: 0 } });
@@ -368,7 +368,7 @@ The URL schema as shown above doesn't have to cover the entire app. This approac
 On the other hand, once the entire app is covered with type-safe routes, we might want to avoid future use of relaxed typing with string and RegExp URL patterns. This can be achieved by adding the following type declaration that effectively disallows string and RegExp URL patterns:
 
 ```ts
-declare module "react-statepod" {
+declare module "react-statepack" {
   interface URLConfig {
     strict: true;
   }
@@ -407,7 +407,7 @@ Use this hook to track an async action's state, whether it's pending, successful
 In the example below, storing and rendering the essential app data (`items`) and the happy path scenario remain unaffected. The loading and error state handling works like a decoupled scaffolding to the main scenario. (`items` are stored in local state here, but any other state used by the app can be there instead.)
 
 ```diff
-+ import { useTransientState } from "react-statepod";
++ import { useTransientState } from "react-statepack";
 - import { fetchItems } from "./fetchItems.js";
 + import { fetchItems as fetchItemsOriginal } from "./fetchItems.js";
 
@@ -428,7 +428,7 @@ In the example below, storing and rendering the essential app data (`items`) and
 ```
 
 ```diff
-+ import { useTransientState } from "react-statepod";
++ import { useTransientState } from "react-statepack";
 
 - export const Status = ({ state }) => {
 + export const Status = () => {
@@ -485,7 +485,7 @@ fetchItems({ throws: true }).catch(handleError)
 `<TransientStateProvider>` creates an isolated instance of initial shared async action state. Its prime use cases are SSR and tests. It isn't required with client-side rendering, but it can be used to separate action states of larger self-contained portions of an app.
 
 ```jsx
-import { TransientStateProvider } from "react-statepod";
+import { TransientStateProvider } from "react-statepack";
 
 <TransientStateProvider>
   <App/>
@@ -531,8 +531,8 @@ Async action state
 
 - [Shared async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx)
 
-Find also the code of these examples in the repo's [`tests`](https://github.com/axtk/react-statepod/tree/main/tests) directory.
+Find also the code of these examples in the repo's [`tests`](https://github.com/axtk/react-statepack/tree/main/tests) directory.
 
 ## Internals
 
-[`statepod`](https://www.npmjs.com/package/statepod)
+[`statepack`](https://www.npmjs.com/package/statepack)

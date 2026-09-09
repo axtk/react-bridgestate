@@ -6,7 +6,7 @@ import {
   matchURL,
   type NavigationOptions,
   type URLData,
-} from "statepod";
+} from "statepack";
 import { useRoute } from "./useRoute.ts";
 
 export type SetRouteState<T extends LocationValue> = (

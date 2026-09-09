@@ -1,4 +1,4 @@
-export * from "statepod";
+export * from "statepack";
 export * from "./src/A.tsx";
 export * from "./src/Area.tsx";
 export * from "./src/RouteContext.ts";

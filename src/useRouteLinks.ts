@@ -1,5 +1,5 @@
 import { type RefObject, useContext, useEffect } from "react";
-import type { ContainerElement, Route } from "statepod";
+import type { ContainerElement, Route } from "statepack";
 import { RouteContext } from "./RouteContext.ts";
 
 /**
